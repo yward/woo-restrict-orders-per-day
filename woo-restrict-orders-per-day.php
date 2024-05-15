@@ -1,18 +1,19 @@
 <?php
 /**
  * Plugin Name:       Restrict Orders per Day for WooCommerce
- * Plugin URI:        https://remicorson.com
+ * Plugin URI:        https://yward.net
  * Description:       Put the shop into catalogue mode once number of orders per day is reached.
- * Version:           0.2
- * Author:            Remi Corson, corsonr
- * Author URI:        https://remicorson.com
+ * Version:           1.0
+ * Author:            Yousif Ward
+ * Author URI:        https://yward.net
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       woo-restrict-orders-per-day
  * Domain Path:       /languages
  */
 
-/*
+/* Updated for WooCommerce HPOS by Yousif Ward
+ * Original author: Remi Corson, corsonr, Original URI: https://remicorson.com/
  * NOTE: this is basic coding for now, quickly done to fulfill a need for companies struggling due to COVID-19 bad stuff occuring ATM.
  * Feel free to submit improvements.
  * Edit the number of orders per day via the WooCommerce > Settings > General meu item.
@@ -111,9 +112,9 @@ if ( ! class_exists( 'ROPD_Restrict_Orders_Per_Day' ) ) {
 			}
 			global $wpdb;
 			$result = $wpdb->get_var( "
-				SELECT DISTINCT count(p.ID) FROM {$wpdb->prefix}posts as p
-				WHERE p.post_type = 'shop_order' AND p.post_date $date_string
-				AND p.post_status IN ('wc-on-hold','wc-processing','wc-completed')
+				SELECT DISTINCT count(p.ID) FROM {$wpdb->prefix}wc_orders as p
+				WHERE p.date_created_gmt $date_string
+				AND p.status IN ('wc-on-hold','wc-processing','wc-completed')
 			" );
 
 			return $result;
