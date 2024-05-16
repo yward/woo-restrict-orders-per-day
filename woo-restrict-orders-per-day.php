@@ -3,7 +3,7 @@
  * Plugin Name:       Restrict Orders per Day for WooCommerce
  * Plugin URI:        https://yward.net
  * Description:       Put the shop into catalogue mode once number of orders per day is reached.
- * Version:           1.0
+ * Version:           1.1
  * Author:            Yousif Ward
  * Author URI:        https://yward.net
  * License:           GPL v2 or later
@@ -12,7 +12,7 @@
  * Domain Path:       /languages
  */
 
-/* Updated for WooCommerce HPOS by Yousif Ward
+/* Updated for WooCommerce HPOS by Yousif Ward//added multsite support/fixed elementor error
  * Original author: Remi Corson, corsonr, Original URI: https://remicorson.com/
  * NOTE: this is basic coding for now, quickly done to fulfill a need for companies struggling due to COVID-19 bad stuff occuring ATM.
  * Feel free to submit improvements.
@@ -22,6 +22,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+// Check if WooCommerce is active
+if ( ( is_multisite() && array_key_exists( 'woocommerce/woocommerce.php', get_site_option( 'active_sitewide_plugins', array() ) ) ) ||
+	in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
 /**
  * Main Class.
@@ -125,7 +128,7 @@ if ( ! class_exists( 'ROPD_Restrict_Orders_Per_Day' ) ) {
 		 */
 		public function enable_catalog_mode() {
 
-			if ( is_admin() ) {
+			if ( is_admin() || is_super_admin() ) {
 				return;
 			}
 
@@ -154,3 +157,4 @@ if ( ! class_exists( 'ROPD_Restrict_Orders_Per_Day' ) ) {
 }
 
 new ROPD_Restrict_Orders_Per_Day();
+}
