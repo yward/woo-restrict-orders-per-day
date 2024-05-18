@@ -3,7 +3,7 @@
  * Plugin Name:       Restrict Orders per Day for WooCommerce
  * Plugin URI:        https://yward.net
  * Description:       Put the shop into catalogue mode once number of orders per day is reached.
- * Version:           1.2
+ * Version:           1.1
  * Author:            Yousif Ward
  * Author URI:        https://yward.net
  * License:           GPL v2 or later
@@ -12,7 +12,7 @@
  * Domain Path:       /languages
  */
 
-/* Updated for WooCommerce HPOS by Yousif Ward//added multsite support/fixed elementor error//supported legacy tables as well
+/* Updated for WooCommerce HPOS by Yousif Ward//added multsite support/fixed elementor error
  * Original author: Remi Corson, corsonr, Original URI: https://remicorson.com/
  * NOTE: this is basic coding for now, quickly done to fulfill a need for companies struggling due to COVID-19 bad stuff occuring ATM.
  * Feel free to submit improvements.
@@ -114,22 +114,11 @@ if ( ! class_exists( 'ROPD_Restrict_Orders_Per_Day' ) ) {
 				$date_string = "BETWEEN '$date' AND '$date2'";
 			}
 			global $wpdb;
-			use Automattic\WooCommerce\Utilities\OrderUtil;
-
-			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-			// HPOS usage is enabled.
-				$result = $wpdb->get_var( "
+			$result = $wpdb->get_var( "
 				SELECT DISTINCT count(p.ID) FROM {$wpdb->prefix}wc_orders as p
 				WHERE p.date_created_gmt $date_string
 				AND p.status IN ('wc-on-hold','wc-processing','wc-completed')
 			" );
-			} else {
-			$result = $wpdb->get_var( "
-				SELECT DISTINCT count(p.ID) FROM {$wpdb->prefix}posts as p
-				WHERE p.post_type = 'shop_order' AND p.post_date $date_string
-				AND p.post_status IN ('wc-on-hold','wc-processing','wc-completed')
-			" );			
-  			 }
 
 			return $result;
 		}
